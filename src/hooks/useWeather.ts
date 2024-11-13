@@ -25,7 +25,6 @@ export function useWeather({ latitude, longitude }: TurbineCoordinates) {
         );
         const forecastData = await forecastResponse.json();
         setForecast(forecastData);
-        console.log(forecastData, "forecastData");
       } catch (err) {
         console.error(err);
         setError("Failed to fetch weather data");
@@ -36,8 +35,6 @@ export function useWeather({ latitude, longitude }: TurbineCoordinates) {
 
     fetchWeatherData();
   }, [latitude, longitude]);
-
-  console.log(currentWindData, "currentWindData");
 
   return { currentWindData, forecast, loading, error };
 }
