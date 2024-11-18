@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import React, { Suspense, useState } from "react";
 import CoordinateInput from "./components/CoordinateInput";
-import WindData from "./components/WindData";
 import "./index.css";
+
+const WindData = React.lazy(() => import("./components/WindData"));
 
 export default function WindDataApp() {
   const [coordinates, setCoordinates] = useState<{
@@ -24,10 +25,12 @@ export default function WindDataApp() {
         <CoordinateInput onSubmit={handleCoordinateSubmit} />
       </div>
       {coordinates && (
-        <WindData
-          latitude={coordinates.latitude}
-          longitude={coordinates.longitude}
-        />
+        <Suspense fallback={<div className="text-center py-4">Loading...</div>}>
+          <WindData
+            latitude={coordinates.latitude}
+            longitude={coordinates.longitude}
+          />
+        </Suspense>
       )}
     </div>
   );
