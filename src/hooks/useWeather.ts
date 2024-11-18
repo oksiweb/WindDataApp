@@ -14,16 +14,19 @@ export function useWeather({ latitude, longitude }: TurbineCoordinates) {
       setLoading(true);
       setError(null);
       try {
-        const currentResponse = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`,
-        );
-        const currentData = await currentResponse.json();
-        setCurrentWindData({ wind: currentData.wind });
+        const [currentResponse, forecastResponse] = await Promise.all([
+          fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`,
+          ),
+          fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`,
+          ),
+        ]);
 
-        const forecastResponse = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`,
-        );
+        const currentData = await currentResponse.json();
         const forecastData = await forecastResponse.json();
+
+        setCurrentWindData({ wind: currentData.wind });
         setForecast(forecastData);
       } catch (err) {
         console.error(err);
